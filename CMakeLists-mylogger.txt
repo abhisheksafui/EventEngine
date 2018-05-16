@@ -1,0 +1,18 @@
+
+include(ExternalProject)
+ExternalProject_Add(logger 
+  GIT_REPOSITORY  https://github.com/abhisheksafui/MyLogger.git
+  #CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+  INSTALL_COMMAND ""
+)
+
+
+ExternalProject_Get_Property(logger source_dir)
+
+#FAKE Directory created to work around bug in cmake complaining about INTERFACE_INCLUDE_DIRECTORIES non existent path
+file(MAKE_DIRECTORY ${source_dir}/src)
+
+add_library(mylogger STATIC IMPORTED)
+add_dependencies(mylogger logger)
+set_target_properties(mylogger PROPERTIES IMPORTED_LOCATION ${source_dir}/out/lib/libmylogger.a)
+set_target_properties(mylogger PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${source_dir}/src)
